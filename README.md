@@ -68,7 +68,7 @@ Edit
 Run the following command to clone the repository:
 
 ```bash
-git clone https://github.com/YOUR-USERNAME/file-processing-system.git
+git clone https://github.com/oluwabusayo-lawal/file-processing-system.git
 cd file-processing-system
 ```
 ### Step 2: Install Python Dependencies
