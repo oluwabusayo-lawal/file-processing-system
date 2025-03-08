@@ -68,3 +68,9 @@ Edit
 ```bash
 git clone https://github.com/YOUR-USERNAME/file-processing-system.git
 cd file-processing-system
+
+## Step 2: Install Python Dependencies
+Run the following command to install the Python dependencies:
+
+```bash
+pip install -r requirements.txt
