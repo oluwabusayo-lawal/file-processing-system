@@ -5,7 +5,7 @@ This project is a **local cloud-based file processing system** that uses **Local
 2. Extracting metadata (row count, column count, column names).
 3. Storing the metadata in a DynamoDB table.
 
-The system is designed to be **lightweight**, **easy to set up**, and **scalable**. It demonstrates core cloud engineering skills, including working with **S3**, **Lambda**, and **DynamoDB**.
+The system is designed to be lightweight, easy to set up, and scalable. It demonstrates core cloud engineering skills, including working with S3, Lambda, and DynamoDB.
 
 ---
 
@@ -65,12 +65,104 @@ Edit
 4. **AWS CLI**: Install the AWS CLI from [here](https://aws.amazon.com/cli/).
 
 ### Step 1: Clone the Repository
+Run the following command to clone the repository:
+
 ```bash
 git clone https://github.com/YOUR-USERNAME/file-processing-system.git
 cd file-processing-system
-
-## Step 2: Install Python Dependencies
+```
+### Step 2: Install Python Dependencies
 Run the following command to install the Python dependencies:
 
 ```bash
 pip install -r requirements.txt
+```
+### Step 3: Start Localstack
+Run the following script to start Localstack using Docker Compose:
+
+```bash
+./scripts/setup_localstack.sh
+```
+### Step 4: Create the DynamoDB Table
+Run the following script to create the DynamoDB table:
+
+```bash
+python src/database.py
+```
+### Step 5: Configure S3 Bucket and Event Trigger
+Run the following script to create the S3 bucket and configure the Lambda trigger:
+
+```bash
+python src/s3_setup.py
+```
+### Step 6: Deploy the Lambda Function
+Deploy the Lambda function using the following script:
+
+```bash
+./scripts/deploy_lambda.sh
+```
+### Step 7: Upload a CSV File to S3
+Upload a sample CSV file to the S3 bucket:
+
+```bash
+aws --endpoint-url=http://localhost:4566 s3 cp sample_data/example.csv s3://test-bucket/example.csv
+```
+### Step 8: Verify the Results
+Check the Lambda logs to confirm the file was processed:
+
+```bash
+aws --endpoint-url=http://localhost:4566 logs tail /aws/lambda/FileProcessorLambda
+```
+Query the DynamoDB table to view the stored metadata:
+
+```bash
+aws --endpoint-url=http://localhost:4566 dynamodb scan --table-name MetadataTable
+```
+### Sample CSV File
+The `sample_data/example.csv` file is provided for testing:
+
+```csv
+id,name,age,city,date
+1,John,25,New York,2024-01-01
+2,Jane,30,Los Angeles,2024-01-02
+```
+### Expected Output from DynamoDB
+After uploading the sample CSV file to S3, the Lambda function will process it and store the metadata in the DynamoDB table (`MetadataTable`). Here’s the expected output when you query the DynamoDB table:
+
+```json
+{
+  "filename": "example.csv",
+  "upload_timestamp": "2024-03-15 10:30:45",
+  "file_size_bytes": 1234,
+  "row_count": 2,
+  "column_count": 5,
+  "column_names": ["id", "name", "age", "city", "date"]
+}
+```
+### Explanation of the Output
+- **filename**: The name of the uploaded CSV file.
+- **upload_timestamp**: The timestamp when the file was processed.
+- **file_size_bytes**: The size of the file in bytes.
+- **row_count**: The number of rows in the CSV file.
+- **column_count**: The number of columns in the CSV file.
+- **column_names**: A list of column names in the CSV file.
+
+## Error Handling
+The system handles the following errors gracefully:
+
+- **Invalid CSV Files**: Logs an error if the file is not a valid CSV.
+- **Connection Issues**: Logs an error if there’s a problem connecting to S3 or DynamoDB.
+- **Missing Files**: Logs an error if the uploaded file is missing or inaccessible.
+
+## Future Improvements
+- **Add Unit Tests**: Write unit tests for the Lambda function and other components.
+- **Support Larger Files**: Optimize the system to handle larger CSV files (e.g., >10MB).
+- **Add Notifications**: Send notifications (e.g., email, Slack) when a file is processed.
+- **Deploy to AWS**: Extend the system to run on actual AWS services (S3, Lambda, DynamoDB).
+
+## References
+- [Localstack Documentation](https://docs.localstack.cloud/)
+- [Boto3 Documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/index.html)
+- [Pandas Documentation](https://pandas.pydata.org/docs/)
+
+
