@@ -34,11 +34,8 @@ The system is designed to be lightweight, easy to set up, and scalable. It demon
 ---
 
 ## Project Structure
-file-processing-system/ ├── README.md # Project documentation ├── .gitignore # Files to ignore in Git ├── requirements.txt # Python dependencies ├── docker-compose.yml # Localstack configuration ├── src/ │ ├── lambda_function.py # Lambda function to process CSV files │ ├── database.py # Script to create DynamoDB table │ ├── s3_setup.py # Script to create S3 bucket and configure event triggers ├── sample_data/ │ └── example.csv # Sample CSV file for testing └── scripts/ ├── setup_localstack.sh # Script to start Localstack └── deploy_lambda.sh # Script to deploy the Lambda function
 
-markdown
-Copy
-Edit
+![work-projec3](https://github.com/user-attachments/assets/c9d817fa-3c6d-46f7-b5ad-d1da212eb3ce)
 
 ---
 
